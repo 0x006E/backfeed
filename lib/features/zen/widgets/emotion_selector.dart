@@ -56,7 +56,9 @@ class EmotionSelector extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         minimumSize: Size.zero, // Set this
-        padding: EdgeInsets.symmetric(vertical: 4), // and this
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        padding: const EdgeInsets.symmetric(vertical: 4), // and this
       ),
       onPressed: onPressed,
       child: AnimatedOpacity(

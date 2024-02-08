@@ -20,7 +20,6 @@ class BackdropBlurredModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    print(fractionalOffsetFromTop);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

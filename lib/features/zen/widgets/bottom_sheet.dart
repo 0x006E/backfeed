@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:sprung/sprung.dart';
 
-final List<int> _colors = [0xffFF2525, 0xffFF6B00, 0xffFFB11B, 0xff007AFF];
-final List<String> _emotionLabels = [
-  "Disappointed",
-  "Delighted",
-  "Happy",
-  "Irritated"
-];
+final Map<String, Color> _emotionColorMap = {
+  "Disappointed": const Color(0xffFF2525),
+  "Delighted": const Color(0xffFF6B00),
+  "Happy": const Color(0xffFFB11B),
+  "Irritated": const Color(0xff007AFF)
+};
 
 class EmotionBottomSheet extends StatefulWidget {
   const EmotionBottomSheet({super.key});
@@ -20,30 +19,13 @@ class EmotionBottomSheet extends StatefulWidget {
   State<EmotionBottomSheet> createState() => _EmotionBottomSheetState();
 }
 
-class _EmotionBottomSheetState extends State<EmotionBottomSheet>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
-  final List<Emotion> _emotions = List.generate(_emotionLabels.length, (i) {
-    return Emotion(
-        label: _emotionLabels[i], intensity: null, color: Color(_colors[i]));
-  });
+class _EmotionBottomSheetState extends State<EmotionBottomSheet> {
+  final List<Emotion> _emotions = _emotionColorMap.entries
+      .map((entry) =>
+          Emotion(label: entry.key, intensity: null, color: entry.value))
+      .toList();
   final List<bool?> _selected =
-      List.generate(_emotionLabels.length, (i) => null);
-
-  @override
-  initState() {
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
-    super.initState();
-    print(_emotions);
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+      List.generate(_emotionColorMap.length, (i) => null);
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +49,7 @@ class _EmotionBottomSheetState extends State<EmotionBottomSheet>
                 height: 1.64),
           ),
           ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: 4,
             itemBuilder: (BuildContext context, i) {

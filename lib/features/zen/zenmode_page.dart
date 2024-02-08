@@ -3,13 +3,13 @@ import 'package:backfeed/common/ui/blurred_modal_bottom_sheet.dart'
 import 'package:backfeed/features/zen/widgets/bottom_sheet.dart'
     deferred as emotion_bottom_sheet;
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 
 class ZenModePage extends StatelessWidget {
   const ZenModePage({super.key});
 
-  Future<void> _handleSwipeUp(
-      DragEndDetails dragEndDetails, BuildContext context) async {
-    if (dragEndDetails.velocity.pixelsPerSecond.dy > 1) return;
+  Future<void> _handleSwipeUp(Offset? offset, BuildContext context) async {
+    if (offset == null) return;
     await modal_bottom_sheet.loadLibrary();
     await emotion_bottom_sheet.loadLibrary();
     if (!context.mounted) return;
@@ -44,9 +44,9 @@ class ZenModePage extends StatelessWidget {
             expands: true,
           ),
         ),
-        GestureDetector(
-          onVerticalDragEnd: (DragEndDetails dragEndDetails) =>
-              _handleSwipeUp(dragEndDetails, context),
+        SwipeDetector(
+          behavior: HitTestBehavior.translucent,
+          onSwipeUp: (Offset? offset) => _handleSwipeUp(offset, context),
           child: Container(
             // color: Color(0xFF545454),
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
