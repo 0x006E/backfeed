@@ -14,6 +14,8 @@ class ZenModePage extends StatelessWidget {
     await emotion_bottom_sheet.loadLibrary();
     if (!context.mounted) return;
     modal_bottom_sheet.showBlurredModalBottomSheet(
+      shouldExpandDownwards: true,
+      fractionalOffsetFromTop: 0.5,
       context: context,
       builder: (BuildContext context) {
         return emotion_bottom_sheet.EmotionBottomSheet();

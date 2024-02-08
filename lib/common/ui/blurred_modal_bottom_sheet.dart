@@ -6,23 +6,33 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class BackdropBlurredModal extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
+  final bool shouldExpandDownwards;
+  final double? fractionalOffsetFromTop;
 
   const BackdropBlurredModal(
-      {Key? key, required this.child, this.backgroundColor})
+      {Key? key,
+      required this.child,
+      this.backgroundColor,
+      required this.shouldExpandDownwards,
+      required this.fractionalOffsetFromTop})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    print(fractionalOffsetFromTop);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Column(
+            mainAxisAlignment: shouldExpandDownwards
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.end,
             children: [
               SizedBox(
-                height: 0.5 * height,
+                height: (fractionalOffsetFromTop ?? 0) * height,
               ),
               Material(
                 color: Colors.transparent,
@@ -53,12 +63,15 @@ Future<T> showBlurredModalBottomSheet<T>(
     /// If the modal should expand downwards, then the modal's position from top must be given manually
     /// and it should be a fraction
     double? fractionalOffsetFromTop}) async {
-  assert(shouldExpandDownwards && fractionalOffsetFromTop != null);
+  assert(shouldExpandDownwards && fractionalOffsetFromTop != null,
+      "You have provided shouldExpandDownwards = true and did not specify fractionalOffsetFromTop");
   final result = await showCustomModalBottomSheet(
       barrierColor: barrierColor,
       context: context,
       builder: builder,
       containerWidget: (_, animation, child) => BackdropBlurredModal(
+            fractionalOffsetFromTop: fractionalOffsetFromTop,
+            shouldExpandDownwards: shouldExpandDownwards,
             child: child,
           ),
       expand: false);

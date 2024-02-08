@@ -27,16 +27,13 @@ class EmotionSelector extends StatelessWidget {
         3,
         (index) {
           scaleFactor += 0.2;
+          final isInitial = ((selected == null || !selected!) && index > 0);
           return AnimatedSize(
             duration: _duration,
-            curve: ElegantSpring(duration: _duration, bounce: 0.5),
+            curve: ElegantSpring(duration: _duration, bounce: 0.25),
             child: SizedBox(
-              width: ((selected == null || !selected!) && index > 0
-                  ? 0
-                  : 15 * scaleFactor),
-              height: ((selected == null || !selected!) && index > 0
-                  ? 0
-                  : 15 * scaleFactor),
+              width: isInitial ? 0 : 18 * scaleFactor,
+              height: isInitial ? 0 : 18 * scaleFactor,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -59,7 +56,7 @@ class EmotionSelector extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         minimumSize: Size.zero, // Set this
-        padding: EdgeInsets.zero, // and this
+        padding: EdgeInsets.symmetric(vertical: 4), // and this
       ),
       onPressed: onPressed,
       child: AnimatedOpacity(

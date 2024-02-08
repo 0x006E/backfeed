@@ -95,8 +95,8 @@ class _EmotionBottomSheetState extends State<EmotionBottomSheet>
           ),
           const Gap(4),
           AnimatedVisibility(
-            enter:
-                slideInVertically(initialOffsetY: 1, curve: Sprung.underDamped),
+            enter: slideInVertically(
+                initialOffsetY: 1, curve: Sprung.criticallyDamped),
             exit: slideOutVertically(
                 targetOffsetY: 1, curve: Curves.fastEaseInToSlowEaseOut),
             visible: _selected.contains(true),
