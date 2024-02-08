@@ -1,6 +1,9 @@
+import 'package:animated_visibility/animated_visibility.dart';
 import 'package:backfeed/features/zen/entities/emotion.dart';
 import 'package:backfeed/features/zen/widgets/emotion_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:sprung/sprung.dart';
 
 final List<int> _colors = [0xffFF2525, 0xffFF6B00, 0xffFFB11B, 0xff007AFF];
 final List<String> _emotionLabels = [
@@ -64,29 +67,52 @@ class _EmotionBottomSheetState extends State<EmotionBottomSheet>
                 height: 1.64),
           ),
           ListView.builder(
-              shrinkWrap: true,
-              itemCount: 4,
-              itemBuilder: (BuildContext context, i) {
-                return EmotionSelector(
-                  onTap: () {
-                    setState(() {
-                      for (var i = 0; i < _selected.length; i++) {
-                        _selected[i] = false;
-                      }
-                      _selected[i] = true;
-                      for (var element in _emotions) {
-                        element.intensity = null;
-                      }
-                      _emotions[i].intensity =
-                          ((_emotions[i].intensity ?? 0) + 1) % 3 + 1;
-                    });
-                  },
-                  selected: _selected[i],
-                  intensity: _emotions[i].intensity,
-                  label: _emotions[i].label,
-                  color: _emotions[i].color,
-                );
-              }),
+            shrinkWrap: true,
+            itemCount: 4,
+            itemBuilder: (BuildContext context, i) {
+              return EmotionSelector(
+                onPressed: () {
+                  setState(() {
+                    final int? currentIntensity = _emotions[i].intensity;
+                    for (var i = 0; i < _selected.length; i++) {
+                      _selected[i] = false;
+                      _emotions[i].intensity = null;
+                    }
+                    _selected[i] = true;
+                    if (currentIntensity == null) {
+                      _emotions[i].intensity = 1;
+                    } else {
+                      _emotions[i].intensity = (currentIntensity % 3) + 1;
+                    }
+                  });
+                },
+                selected: _selected[i],
+                intensity: _emotions[i].intensity,
+                label: _emotions[i].label,
+                color: _emotions[i].color,
+              );
+            },
+          ),
+          const Gap(4),
+          AnimatedVisibility(
+            enter:
+                slideInVertically(initialOffsetY: 1, curve: Sprung.underDamped),
+            exit: slideOutVertically(
+                targetOffsetY: 1, curve: Curves.fastEaseInToSlowEaseOut),
+            visible: _selected.contains(true),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(12),
+                backgroundColor: const Color(0xff232429),
+              ),
+              onPressed: () {},
+              child: const Text(
+                "Save",
+                style:
+                    TextStyle(fontSize: 16, height: 1.43, color: Colors.white),
+              ),
+            ),
+          )
         ],
       ),
     );

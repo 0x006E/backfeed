@@ -1,54 +1,24 @@
-import 'dart:ui';
-
-import 'package:backfeed/features/zen/widgets/bottom_sheet.dart';
+import 'package:backfeed/common/ui/blurred_modal_bottom_sheet.dart'
+    deferred as modal_bottom_sheet;
+import 'package:backfeed/features/zen/widgets/bottom_sheet.dart'
+    deferred as emotion_bottom_sheet;
 import 'package:flutter/material.dart';
 
 class ZenModePage extends StatelessWidget {
   const ZenModePage({super.key});
 
-  void _handleTap(BuildContext context) {
-    showModalBottomSheet(
-        clipBehavior: Clip.antiAlias,
-        context: context,
-        backgroundColor: Colors.transparent,
-        barrierColor: Colors.transparent,
-        isScrollControlled: true,
-        builder: (context) {
-          return GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: FractionallySizedBox(
-              heightFactor: 1,
-              widthFactor: 1,
-              child: Container(
-                color: const Color(0xFFEAEAEA).withOpacity(0.62),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            margin: const EdgeInsets.all(16),
-                            child: const EmotionBottomSheet(),
-                          ),
-                        ),
-                        const Flexible(
-                          child: FractionallySizedBox(
-                            heightFactor: 0.25,
-                          ),
-                        )
-                      ]),
-                ),
-              ),
-            ),
-          );
-        });
+  Future<void> _handleSwipeUp(
+      DragEndDetails dragEndDetails, BuildContext context) async {
+    if (dragEndDetails.velocity.pixelsPerSecond.dy > 1) return;
+    await modal_bottom_sheet.loadLibrary();
+    await emotion_bottom_sheet.loadLibrary();
+    if (!context.mounted) return;
+    modal_bottom_sheet.showBlurredModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return emotion_bottom_sheet.EmotionBottomSheet();
+      },
+    );
   }
 
   @override
@@ -58,6 +28,7 @@ class ZenModePage extends StatelessWidget {
         const SizedBox(height: 35),
         const Expanded(
           child: TextField(
+            autofocus: true,
             decoration: InputDecoration(
               hintText: "Start typing...",
               contentPadding: EdgeInsets.all(16),
@@ -72,7 +43,8 @@ class ZenModePage extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => _handleTap(context),
+          onVerticalDragEnd: (DragEndDetails dragEndDetails) =>
+              _handleSwipeUp(dragEndDetails, context),
           child: Container(
             // color: Color(0xFF545454),
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
