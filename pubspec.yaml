@@ -10,6 +10,7 @@ dependencies:
   elegant_spring_animation: ^1.0.1
   flutter:
     sdk: flutter
+  flutter_statusbarcolor_ns: ^0.5.0
   flutter_swipe_detector: ^2.0.0
   gap: ^3.0.1
   modal_bottom_sheet: ^3.0.0-pre
