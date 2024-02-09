@@ -65,13 +65,13 @@ class EmotionSelector extends StatelessWidget {
         duration: _duration,
         curve: Curves.decelerate,
         opacity: opacity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Row(
-            children: [
-              getDots(intensity: intensity),
-              const Gap(8),
-              Text(
+        child: Row(
+          children: [
+            getDots(intensity: intensity),
+            const Gap(8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Text(
                 label,
                 style: const TextStyle(
                   color: Color(0xff3D3D3D),
@@ -79,8 +79,8 @@ class EmotionSelector extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
