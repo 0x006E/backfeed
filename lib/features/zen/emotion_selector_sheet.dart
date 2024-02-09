@@ -1,4 +1,5 @@
 import 'package:animated_visibility/animated_visibility.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:backfeed/features/zen/entities/emotion.dart';
 import 'package:backfeed/features/zen/widgets/emotion_selector.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,16 @@ final Map<String, Color> _emotionColorMap = {
   "Irritated": const Color(0xff007AFF)
 };
 
-class EmotionBottomSheet extends StatefulWidget {
-  const EmotionBottomSheet({super.key});
+class EmotionSelectorSheet extends StatefulWidget {
+  const EmotionSelectorSheet({super.key, required this.onSave});
+
+  final Function onSave;
 
   @override
-  State<EmotionBottomSheet> createState() => _EmotionBottomSheetState();
+  State<EmotionSelectorSheet> createState() => _EmotionSelectorSheetState();
 }
 
-class _EmotionBottomSheetState extends State<EmotionBottomSheet> {
+class _EmotionSelectorSheetState extends State<EmotionSelectorSheet> {
   final List<Emotion> _emotions = _emotionColorMap.entries
       .map((entry) =>
           Emotion(label: entry.key, intensity: null, color: entry.value))
@@ -88,7 +91,10 @@ class _EmotionBottomSheetState extends State<EmotionBottomSheet> {
                 padding: const EdgeInsets.all(12),
                 backgroundColor: const Color(0xff232429),
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.router.pop();
+                widget.onSave();
+              },
               child: const Text(
                 "Save",
                 style:

@@ -68,6 +68,7 @@ Future<T> showBlurredModalBottomSheet<T>(
       barrierColor: barrierColor,
       context: context,
       builder: builder,
+      useRootNavigator: true,
       containerWidget: (_, animation, child) => BackdropBlurredModal(
             fractionalOffsetFromTop: fractionalOffsetFromTop,
             shouldExpandDownwards: shouldExpandDownwards,

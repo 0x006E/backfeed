@@ -1,15 +1,17 @@
-import 'package:backfeed/features/zen/zenmode_page.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        backgroundColor: Color(0xFFFCFCFE),
+    return Scaffold(
         body: SafeArea(
-          child: ZenModePage(),
-        ));
+      child: AutoRouter(
+        navigatorObservers: () => [HeroController()],
+      ),
+    ));
   }
 }

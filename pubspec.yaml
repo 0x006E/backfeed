@@ -7,19 +7,40 @@ environment:
   sdk: ">=3.2.4 <4.0.0"
 dependencies:
   animated_visibility: ^0.0.4
+  auto_route: ^7.8.4
   elegant_spring_animation: ^1.0.1
+  feather_icons: ^1.2.0
   flutter:
     sdk: flutter
   flutter_statusbarcolor_ns: ^0.5.0
-  flutter_swipe_detector: ^2.0.0
   gap: ^3.0.1
+  get_it: ^7.6.7
   modal_bottom_sheet: ^3.0.0-pre
   sprung: ^3.0.1
+  swipedetector_nullsafety: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  auto_route_generator: ^7.3.2
+  build_runner: ^2.4.8
+
+targets:
+  $default:
+    builders:
+      auto_route_generator:auto_route_generator: # this for @RoutePage
+        options:
+          enable_cached_builds: true
+        generate_for:
+          - lib/features/**/**_page.dart
+          - lib/home_page.dart
+      auto_route_generator:auto_router_generator: # this for @AutoRouterConfig
+        options:
+          enable_cached_builds: true
+        generate_for:
+          - lib/ui/router/app_router.dart
+
 flutter:
   fonts:
     - family: SF Pro Display

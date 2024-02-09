@@ -1,17 +1,21 @@
-import 'package:backfeed/homepage.dart';
+import 'package:backfeed/locator.dart';
+import 'package:backfeed/router/app_router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  setupLocator();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    final appRouter = locator<AppRouter>();
+    return MaterialApp.router(
+      routerConfig: appRouter.config(),
+      title: 'Backfeed',
       theme: ThemeData(
         fontFamily: 'SF Pro Display',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -20,7 +24,6 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),
-      home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
