@@ -10,6 +10,7 @@ import 'package:backfeed/router/app_router.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:swipedetector_nullsafety/swipedetector_nullsafety.dart';
 
 @RoutePage()
 class ZenModePage extends StatefulWidget {
@@ -24,7 +25,8 @@ class _ZenModePageState extends State<ZenModePage> {
       TextEditingController(text: "Ajay has lost focus.");
 
   int displayedLineCount = 0;
-  double fontSize = 21;
+  double fontSize = 24;
+  bool disableTextField = false;
 
   Future<void> _handleSwipeUp(BuildContext context) async {
     await modal_bottom_sheet.loadLibrary();
@@ -32,7 +34,7 @@ class _ZenModePageState extends State<ZenModePage> {
     if (!context.mounted) return;
     modal_bottom_sheet.showBlurredModalBottomSheet(
       shouldExpandDownwards: true,
-      fractionalOffsetFromTop: 0.5,
+      fractionalOffsetFromTop: 0.52,
       context: context,
       builder: (BuildContext context) {
         return emotion_selector_bottom_sheet.EmotionSelectorSheet(
@@ -43,16 +45,21 @@ class _ZenModePageState extends State<ZenModePage> {
   }
 
   Future<void> onSave() async {
+    setState(() {
+      disableTextField = true;
+    });
     await locator<AppRouter>().navigate(const ThoughtsRoute());
   }
 
   void updateDisplayedLineCount() {
     final span = _textEditingController.buildTextSpan(
-        context: context,
-        withComposing: false,
-        style: TextStyle(
+      context: context,
+      withComposing: false,
+      style: TextStyle(
           fontSize: fontSize,
-        ));
+          height: 1.4,
+          letterSpacing: fontSize == 24 ? -0.3 : -0.2),
+    );
     final textPainter = TextPainter(
       text: span,
       textDirection: TextDirection.ltr,
@@ -62,16 +69,12 @@ class _ZenModePageState extends State<ZenModePage> {
     textPainter.layout(maxWidth: MediaQuery.of(context).size.width - 32);
     setState(() {
       final currentLineCount = textPainter.computeLineMetrics().length;
-      print(currentLineCount);
-      print(displayedLineCount);
-      if (currentLineCount - displayedLineCount >= 3) {
-        if (fontSize > 17) {
-          fontSize -= 2;
-        }
-        displayedLineCount = currentLineCount;
-      } else if (currentLineCount - displayedLineCount <= -3) {
-        if (fontSize < 21) {
-          fontSize += 2;
+      final diffInLineCount = (currentLineCount - displayedLineCount).abs();
+      if (diffInLineCount > 2) {
+        if (fontSize == 24) {
+          fontSize = 20;
+        } else {
+          fontSize = 24;
         }
         displayedLineCount = currentLineCount;
       }
@@ -127,6 +130,8 @@ class _ZenModePageState extends State<ZenModePage> {
             ),
             Expanded(
               child: TextFormField(
+                enabled: !disableTextField,
+                autofocus: true,
                 controller: _textEditingController,
                 decoration: const InputDecoration(
                   hintText: "Start typing...",
@@ -134,8 +139,9 @@ class _ZenModePageState extends State<ZenModePage> {
                   border: InputBorder.none,
                 ),
                 style: TextStyle(
-                  fontSize: fontSize,
-                ),
+                    fontSize: fontSize,
+                    height: 1.4,
+                    letterSpacing: fontSize == 24 ? -0.3 : -0.2),
                 maxLines: null,
                 minLines: null,
                 expands: true,
@@ -147,8 +153,8 @@ class _ZenModePageState extends State<ZenModePage> {
               exit: slideOutVertically(
                   targetOffsetY: 1, curve: Curves.fastEaseInToSlowEaseOut),
               visible: _textEditingController.text.split(" ").length >= 3,
-              child: GestureDetector(
-                onTap: () => _handleSwipeUp(context),
+              child: SwipeDetector(
+                onSwipeUp: () => _handleSwipeUp(context),
                 child: Container(
                   // color: Color(0xFF545454),
                   padding:

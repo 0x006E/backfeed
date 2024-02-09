@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:backfeed/common/utils/change_statusbar_color.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -24,7 +25,7 @@ class BackdropBlurredModal extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
           child: Column(
             mainAxisAlignment: shouldExpandDownwards
                 ? MainAxisAlignment.start
@@ -64,6 +65,7 @@ Future<T> showBlurredModalBottomSheet<T>(
     double? fractionalOffsetFromTop}) async {
   assert(shouldExpandDownwards && fractionalOffsetFromTop != null,
       "You have provided shouldExpandDownwards = true and did not specify fractionalOffsetFromTop");
+  changeStatusBarColor(barrierColor ?? const Color(0x9EEAEAEA));
   final result = await showCustomModalBottomSheet(
       barrierColor: barrierColor,
       context: context,
