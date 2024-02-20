@@ -8,18 +8,25 @@ environment:
 dependencies:
   animated_visibility: ^0.0.4
   auto_route: ^7.8.4
+  boxy: ^2.2.0
   elegant_spring_animation: ^1.0.1
+  equatable: ^2.0.5
   feather_icons: ^1.2.0
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.10
   flutter_statusbarcolor_ns: ^0.5.0
+  flutter_swipe_detector: ^2.0.0
   gap: ^3.0.1
   get_it: ^7.6.7
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
   modal_bottom_sheet: ^3.0.0-pre
   riverpod_annotation: ^2.3.4
   sprung: ^3.0.1
-  swipedetector_nullsafety: ^2.0.0
+  ulid4d: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +37,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.11
   custom_lint: ^0.6.0
   riverpod_lint: ^2.3.9
+  hive_generator: ^2.0.1
 
 targets:
   $default:

@@ -1,28 +1,32 @@
 import 'package:animated_visibility/animated_visibility.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:backfeed/common/ui/blurred_modal_bottom_sheet.dart'
+import 'package:backfeed/common/data/entities/thought/thought.dart';
+import 'package:backfeed/common/data/providers/thought/local_thought_repository_provider.dart';
+import 'package:backfeed/common/ui/floating_modal_bottom_sheet.dart'
     deferred as modal_bottom_sheet;
 import 'package:backfeed/common/utils/change_statusbar_color.dart';
 import 'package:backfeed/features/zen/emotion_selector_sheet.dart'
     deferred as emotion_selector_bottom_sheet;
+import 'package:backfeed/features/zen/entities/emotion.dart';
 import 'package:backfeed/locator.dart';
 import 'package:backfeed/router/app_router.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:gap/gap.dart';
-import 'package:swipedetector_nullsafety/swipedetector_nullsafety.dart';
 
 @RoutePage()
-class ZenModePage extends StatefulWidget {
+class ZenModePage extends ConsumerStatefulWidget {
   const ZenModePage({super.key});
 
   @override
-  State<ZenModePage> createState() => _ZenModePageState();
+  ConsumerState<ZenModePage> createState() => _ZenModePageState();
 }
 
-class _ZenModePageState extends State<ZenModePage> {
+class _ZenModePageState extends ConsumerState<ZenModePage> {
   final TextEditingController _textEditingController =
-      TextEditingController(text: "Ajay has lost focus.");
+      TextEditingController(text: "");
 
   int displayedLineCount = 0;
   double fontSize = 24;
@@ -32,10 +36,9 @@ class _ZenModePageState extends State<ZenModePage> {
     await modal_bottom_sheet.loadLibrary();
     await emotion_selector_bottom_sheet.loadLibrary();
     if (!context.mounted) return;
-    modal_bottom_sheet.showBlurredModalBottomSheet(
-      shouldExpandDownwards: true,
-      fractionalOffsetFromTop: 0.52,
+    modal_bottom_sheet.showFloatingModalBottomSheet(
       context: context,
+      expandHeight: 50,
       builder: (BuildContext context) {
         return emotion_selector_bottom_sheet.EmotionSelectorSheet(
           onSave: onSave,
@@ -44,10 +47,16 @@ class _ZenModePageState extends State<ZenModePage> {
     );
   }
 
-  Future<void> onSave() async {
+  Future<void> onSave(Emotion emotion) async {
     setState(() {
       disableTextField = true;
     });
+    final thought = Thought(
+        thought: _textEditingController.text,
+        emotion: emotion.emotion,
+        intensity: emotion.intensity ?? 0);
+    await ref.watch(thoughtRepositoryProvider).add(thought);
+    ref.invalidate(thoughtsProvider);
     await locator<AppRouter>().navigate(const ThoughtsRoute());
   }
 
@@ -154,7 +163,7 @@ class _ZenModePageState extends State<ZenModePage> {
                   targetOffsetY: 1, curve: Curves.fastEaseInToSlowEaseOut),
               visible: _textEditingController.text.split(" ").length >= 3,
               child: SwipeDetector(
-                onSwipeUp: () => _handleSwipeUp(context),
+                onSwipeUp: (_) => _handleSwipeUp(context),
                 child: Container(
                   // color: Color(0xFF545454),
                   padding:

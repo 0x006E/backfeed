@@ -1,15 +1,19 @@
+import 'package:backfeed/common/data/repositories/thought/local_thought_repository.dart';
 import 'package:backfeed/locator.dart';
 import 'package:backfeed/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(LocalThoughtAdapter());
   setupLocator();
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
